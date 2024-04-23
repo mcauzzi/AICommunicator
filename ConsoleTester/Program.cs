@@ -1,7 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more informati
 
 using System.Net.Http.Json;
-using AnythingLLMComunicator;
+using ServiceImplementations;
 
 
 const string WEB_API_KEY       = "3E1D9MW-3EC4GGA-PJ3ATGK-TGVK6RD";
@@ -19,10 +19,10 @@ while (true)
     {
         return;
     }
-    string inputMessage =await  speechService.GetMessage();
-    var    response     =await webApiComms.SendChatRequest(chatUrl, inputMessage);
+    string inputMessage =await  speechService.VoiceToText();
+    var    response     =await webApiComms.SendChatRequest( inputMessage);
     Console.WriteLine(response);
-    await speechService.SpeakText(response.TextResponse);
+    await speechService.TextToAudio(response.TextResponse);
 }
 
 

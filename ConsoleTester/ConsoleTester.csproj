@@ -9,7 +9,12 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.CognitiveServices.Speech" Version="1.37.0" />
+      <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
       <PackageReference Include="NAudio" Version="2.2.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ServiceImplementations\ServiceImplementations.csproj" />
     </ItemGroup>
 
 </Project>

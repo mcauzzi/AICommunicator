@@ -1,8 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnythingLLMComunicator", "AnythingLLMComunicator\AnythingLLMComunicator.csproj", "{B612316A-629B-4708-A0B2-25F8E4D96A5F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTester", "ConsoleTester\ConsoleTester.csproj", "{B612316A-629B-4708-A0B2-25F8E4D96A5F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AudioDeviceEnumerator", "AudioDeviceEnumerator\AudioDeviceEnumerator.csproj", "{D422E073-68A0-48FB-B2F8-08D6B2B21419}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnythingLLMCommunicator", "AnythingLLMCommunicator\AnythingLLMCommunicator.csproj", "{F2F4DF2E-D520-4FFB-A491-9AAD9321374B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceInterfaces", "ServiceInterfaces\ServiceInterfaces.csproj", "{589BB7E3-D2F5-4458-B163-85A3E4D2251F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatDtos", "ChatDtos\ChatDtos.csproj", "{82CEA7A7-64E6-4C92-8F04-D43FAC5E7106}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceImplementations", "ServiceImplementations\ServiceImplementations.csproj", "{315E500F-BA37-4F50-B4FF-0A3492DD007C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +26,21 @@ Global
 		{D422E073-68A0-48FB-B2F8-08D6B2B21419}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D422E073-68A0-48FB-B2F8-08D6B2B21419}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D422E073-68A0-48FB-B2F8-08D6B2B21419}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2F4DF2E-D520-4FFB-A491-9AAD9321374B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2F4DF2E-D520-4FFB-A491-9AAD9321374B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2F4DF2E-D520-4FFB-A491-9AAD9321374B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2F4DF2E-D520-4FFB-A491-9AAD9321374B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{589BB7E3-D2F5-4458-B163-85A3E4D2251F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{589BB7E3-D2F5-4458-B163-85A3E4D2251F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{589BB7E3-D2F5-4458-B163-85A3E4D2251F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{589BB7E3-D2F5-4458-B163-85A3E4D2251F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82CEA7A7-64E6-4C92-8F04-D43FAC5E7106}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82CEA7A7-64E6-4C92-8F04-D43FAC5E7106}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82CEA7A7-64E6-4C92-8F04-D43FAC5E7106}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82CEA7A7-64E6-4C92-8F04-D43FAC5E7106}.Release|Any CPU.Build.0 = Release|Any CPU
+		{315E500F-BA37-4F50-B4FF-0A3492DD007C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{315E500F-BA37-4F50-B4FF-0A3492DD007C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{315E500F-BA37-4F50-B4FF-0A3492DD007C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{315E500F-BA37-4F50-B4FF-0A3492DD007C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
