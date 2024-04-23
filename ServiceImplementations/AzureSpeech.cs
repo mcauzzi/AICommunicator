@@ -1,10 +1,13 @@
+using System;
+using System.Threading.Tasks;
 using Microsoft.CognitiveServices.Speech;
 using Microsoft.CognitiveServices.Speech.Audio;
 using NAudio.Wave;
+using ServiceInterfaces;
 
-namespace AnythingLLMComunicator;
+namespace ServiceImplementations;
 
-public class AzureSpeech
+public class AzureSpeech : ISpeech
 {
     private static readonly string SPEECH_KEY    = Environment.GetEnvironmentVariable("SPEECH_KEY");
     private static readonly string SPEECH_REGION = Environment.GetEnvironmentVariable("SPEECH_REGION");
@@ -15,9 +18,7 @@ public class AzureSpeech
         SpeechConfig.SpeechSynthesisVoiceName = "it-IT-CalimeroNeural";
         SpeechConfig.SpeechSynthesisLanguage  = "it-IT";
     }
-
     private SpeechConfig? SpeechConfig { get; set; }
-
     static string OutputSpeechRecognitionResult(SpeechRecognitionResult speechRecognitionResult)
     {
         switch (speechRecognitionResult.Reason)
@@ -46,7 +47,7 @@ public class AzureSpeech
         return "";
     }
 
-    public async Task<string> GetMessage()
+    public async Task<string> VoiceToText()
     {
         SpeechConfig.SpeechRecognitionLanguage = "it-IT";
         //"74929fe5-542f-4f6f-a9fd-81a4bea18fe1"
@@ -58,7 +59,7 @@ public class AzureSpeech
         return OutputSpeechRecognitionResult(speechRecognitionResult);
     }
 
-    public async Task SpeakText(string text)
+    public async Task TextToAudio(string text)
     {
         SpeechConfig.SpeechSynthesisVoiceName = "en-US-AvaMultilingualNeural";
 
