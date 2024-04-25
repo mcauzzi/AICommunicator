@@ -1,7 +1,5 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTester", "ConsoleTester\ConsoleTester.csproj", "{B612316A-629B-4708-A0B2-25F8E4D96A5F}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AudioDeviceEnumerator", "AudioDeviceEnumerator\AudioDeviceEnumerator.csproj", "{D422E073-68A0-48FB-B2F8-08D6B2B21419}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnythingLLMCommunicator", "AnythingLLMCommunicator\AnythingLLMCommunicator.csproj", "{F2F4DF2E-D520-4FFB-A491-9AAD9321374B}"
@@ -18,10 +16,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B612316A-629B-4708-A0B2-25F8E4D96A5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B612316A-629B-4708-A0B2-25F8E4D96A5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B612316A-629B-4708-A0B2-25F8E4D96A5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B612316A-629B-4708-A0B2-25F8E4D96A5F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D422E073-68A0-48FB-B2F8-08D6B2B21419}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D422E073-68A0-48FB-B2F8-08D6B2B21419}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D422E073-68A0-48FB-B2F8-08D6B2B21419}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -6,7 +6,7 @@ public class MainLoop : BackgroundService
 {
     private readonly ILogger<MainLoop> _logger;
 
-    public MainLoop(ILogger<MainLoop> logger, ISpeech speechService, IWebApiCommunicator communicator)
+    public MainLoop(ILogger<MainLoop> logger, ISpeech speechService, ILLMWebApiCommunicator communicator)
     {
         SpeechService = speechService;
         Communicator  = communicator;
@@ -27,5 +27,5 @@ public class MainLoop : BackgroundService
     }
 
     private ISpeech             SpeechService { get; init; }
-    private IWebApiCommunicator Communicator  { get; init; }
+    private ILLMWebApiCommunicator Communicator  { get; init; }
 }

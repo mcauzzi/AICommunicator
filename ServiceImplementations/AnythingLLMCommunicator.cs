@@ -5,18 +5,21 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using ChatDtos;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using ServiceImplementations.Configs;
 using ServiceInterfaces;
 
 namespace ServiceImplementations;
 
-public class WebApiCommunicator : IWebApiCommunicator
+// ReSharper disable once InconsistentNaming
+public class AnythingLLMCommunicator : ILLMWebApiCommunicator
 {
-    public WebApiCommunicator(string baseAddress, string webApiKey,ILogger<WebApiCommunicator> logger)
+    public AnythingLLMCommunicator(IOptions<AnythingLLMConfig> config,ILogger<AnythingLLMCommunicator> logger)
     {
-        WebApiKey   = webApiKey;
+        WebApiKey   = config.Value.WebApiKey;
         Logger = logger;
         ChatUrl     = "";
-        Client      = new HttpClient() { BaseAddress = new Uri(baseAddress) };
+        Client      = new HttpClient() { BaseAddress = new Uri(config.Value.BaseAddress) };
     }
     public async Task<ChatResponse?> SendChatRequest(string input)
     {
@@ -35,6 +38,6 @@ public class WebApiCommunicator : IWebApiCommunicator
 
     private string ChatUrl   { get; }
     private string WebApiKey { get; }
-    private  ILogger<WebApiCommunicator> Logger    { get; }
+    private  ILogger<AnythingLLMCommunicator> Logger    { get; }
     private HttpClient Client    { get; }
 }
