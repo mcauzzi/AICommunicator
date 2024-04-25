@@ -3,7 +3,7 @@ using ChatDtos;
 
 namespace ServiceInterfaces;
 
-public interface IWebApiCommunicator
+public interface ILLMWebApiCommunicator
 {
     Task<ChatResponse?> SendChatRequest( string input);
 }

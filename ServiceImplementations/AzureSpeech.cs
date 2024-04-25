@@ -6,6 +6,7 @@ using Microsoft.CognitiveServices.Speech;
 using Microsoft.CognitiveServices.Speech.Audio;
 using Microsoft.Extensions.Logging;
 using NAudio.Wave;
+using ServiceImplementations.Exceptions;
 using ServiceInterfaces;
 
 namespace ServiceImplementations;
@@ -15,8 +16,8 @@ public class AzureSpeech : ISpeech, IDisposable
     public AzureSpeech(ILogger<AzureSpeech> logger)
     {
         Logger       = logger;
-        SpeechConfig = SpeechConfig.FromSubscription(SPEECH_KEY, SPEECH_REGION);
-        LoggerScope = Logger.BeginScope(new Dictionary<string, string>()
+        SpeechConfig = SpeechConfig.FromSubscription(SpeechKey, SpeechRegion);
+        LoggerScope = Logger.BeginScope(new Dictionary<string, string>
                                         {
                                             [nameof(SpeechConfig.SpeechSynthesisLanguage)] =
                                                 SpeechConfig.SpeechSynthesisLanguage,
@@ -89,12 +90,16 @@ public class AzureSpeech : ISpeech, IDisposable
         }
     }
 
-    private static readonly string               SPEECH_KEY    = Environment.GetEnvironmentVariable("SPEECH_KEY");
-    private static readonly string               SPEECH_REGION = Environment.GetEnvironmentVariable("SPEECH_REGION");
-    private                 ILogger<AzureSpeech> Logger { get; }
-
     public void Dispose()
     {
         LoggerScope?.Dispose();
     }
+    
+    private ILogger<AzureSpeech> Logger { get; }
+
+    private static readonly string SpeechKey =
+        Environment.GetEnvironmentVariable("SPEECH_KEY") ?? throw new AzureSpeechKeyNotSetException();
+
+    private static readonly string SpeechRegion = Environment.GetEnvironmentVariable("SPEECH_REGION") ??
+                                                   throw new AzureSpeechRegionNotSetException();
 }
