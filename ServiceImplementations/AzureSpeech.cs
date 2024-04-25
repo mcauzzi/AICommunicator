@@ -1,44 +1,54 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.CognitiveServices.Speech;
 using Microsoft.CognitiveServices.Speech.Audio;
+using Microsoft.Extensions.Logging;
 using NAudio.Wave;
 using ServiceInterfaces;
 
 namespace ServiceImplementations;
 
-public class AzureSpeech : ISpeech
+public class AzureSpeech : ISpeech, IDisposable
 {
-    private static readonly string SPEECH_KEY    = Environment.GetEnvironmentVariable("SPEECH_KEY");
-    private static readonly string SPEECH_REGION = Environment.GetEnvironmentVariable("SPEECH_REGION");
-
-    public AzureSpeech()
+    public AzureSpeech(ILogger<AzureSpeech> logger)
     {
-        SpeechConfig                          = SpeechConfig.FromSubscription(SPEECH_KEY, SPEECH_REGION);
+        Logger       = logger;
+        SpeechConfig = SpeechConfig.FromSubscription(SPEECH_KEY, SPEECH_REGION);
+        LoggerScope = Logger.BeginScope(new Dictionary<string, string>()
+                                        {
+                                            [nameof(SpeechConfig.SpeechSynthesisLanguage)] =
+                                                SpeechConfig.SpeechSynthesisLanguage,
+                                            [nameof(SpeechConfig.SpeechSynthesisVoiceName)] =
+                                                SpeechConfig.SpeechSynthesisVoiceName
+                                        });
         SpeechConfig.SpeechSynthesisVoiceName = "it-IT-CalimeroNeural";
         SpeechConfig.SpeechSynthesisLanguage  = "it-IT";
     }
+
+    public IDisposable? LoggerScope { get; set; }
+
     private SpeechConfig? SpeechConfig { get; set; }
-    static string OutputSpeechRecognitionResult(SpeechRecognitionResult speechRecognitionResult)
+
+    string OutputSpeechRecognitionResult(SpeechRecognitionResult speechRecognitionResult)
     {
         switch (speechRecognitionResult.Reason)
         {
             case ResultReason.RecognizedSpeech:
-                Console.WriteLine($"RECOGNIZED: Text={speechRecognitionResult.Text}");
+                Logger.LogInformation("Recognized text {RecognizedText}", speechRecognitionResult.Text);
                 return speechRecognitionResult.Text;
-                break;
             case ResultReason.NoMatch:
-                Console.WriteLine($"NOMATCH: Speech could not be recognized.");
+                Logger.LogInformation("Speech could not be recognized");
                 break;
             case ResultReason.Canceled:
                 var cancellation = CancellationDetails.FromResult(speechRecognitionResult);
-                Console.WriteLine($"CANCELED: Reason={cancellation.Reason}");
+                Logger.LogInformation("Speech recognition cancelled, Reason={CancellationReason}", cancellation.Reason);
 
                 if (cancellation.Reason == CancellationReason.Error)
                 {
-                    Console.WriteLine($"CANCELED: ErrorCode={cancellation.ErrorCode}");
-                    Console.WriteLine($"CANCELED: ErrorDetails={cancellation.ErrorDetails}");
-                    Console.WriteLine($"CANCELED: Did you set the speech resource key and region values?");
+                    Logger.LogInformation("ErrorCode:{CancellationErrorCode}, ErrorDetails:{CancellationErrorDetails}",
+                                          cancellation.ErrorCode, cancellation.ErrorDetails);
                 }
 
                 break;
@@ -55,6 +65,7 @@ public class AzureSpeech : ISpeech
         using var speechRecognizer = new SpeechRecognizer(SpeechConfig, audioConfig);
 
         Console.WriteLine("Speak into your microphone.");
+        Logger.LogInformation("Sending Speech-to-text request to azure");
         var speechRecognitionResult = await speechRecognizer.RecognizeOnceAsync();
         return OutputSpeechRecognitionResult(speechRecognitionResult);
     }
@@ -68,14 +79,22 @@ public class AzureSpeech : ISpeech
             var       speechSynthesisResult = await speechSynthesizer.SpeakTextAsync(text);
             using var stream                = AudioDataStream.FromResult(speechSynthesisResult);
             await stream.SaveToWaveFileAsync("./lastTTSResult.wav");
-            using(var audioFile = new AudioFileReader("./lastTTSResult.wav"))
-            using(var outputDevice = new WaveOutEvent())
+            await using (var audioFile = new AudioFileReader("./lastTTSResult.wav"))
+            using (var outputDevice = new WaveOutEvent())
             {
                 outputDevice.DeviceNumber = 1;
                 outputDevice.Init(audioFile);
-               
                 outputDevice.Play();
             }
         }
+    }
+
+    private static readonly string               SPEECH_KEY    = Environment.GetEnvironmentVariable("SPEECH_KEY");
+    private static readonly string               SPEECH_REGION = Environment.GetEnvironmentVariable("SPEECH_REGION");
+    private                 ILogger<AzureSpeech> Logger { get; }
+
+    public void Dispose()
+    {
+        LoggerScope?.Dispose();
     }
 }

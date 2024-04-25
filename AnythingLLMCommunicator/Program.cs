@@ -1,7 +1,6 @@
 using AnythingLLMCommunicator;
 using Serilog;
 using Serilog.Formatting.Compact;
-using SerilogTracing;
 using ServiceImplementations;
 using ServiceInterfaces;
 
