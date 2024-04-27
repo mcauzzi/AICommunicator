@@ -17,11 +17,22 @@ public class MainLoop : BackgroundService
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            Console.WriteLine("Premi qualsiasi Tasto per procedere con il riconoscimento vocale");
-            string inputMessage = await SpeechService.VoiceToText();
-            var    response     = await Communicator.SendChatRequest( inputMessage);
-            Console.WriteLine(response);
-            await SpeechService.TextToAudio(response.TextResponse);
+            Console.WriteLine("Press any key to start chatting with the AI");
+            Console.ReadKey();
+            try
+            {
+                string inputMessage = await SpeechService.VoiceToText();
+                if (!string.IsNullOrEmpty(inputMessage))
+                {
+                    var response = await Communicator.SendChatRequest(inputMessage);
+                    Console.WriteLine(response);
+                    await SpeechService.TextToAudio(response.TextResponse);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex,"Error during the chat request");
+            }
             await Task.Delay(1000, stoppingToken);
         }
     }

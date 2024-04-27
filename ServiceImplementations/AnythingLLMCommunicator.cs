@@ -18,7 +18,7 @@ public class AnythingLLMCommunicator : ILLMWebApiCommunicator
     {
         WebApiKey   = config.Value.WebApiKey;
         Logger = logger;
-        ChatUrl     = "";
+        ChatUrl     =$"api/v1/workspace/{config.Value.WorkspaceSlug}/chat";
         Client      = new HttpClient() { BaseAddress = new Uri(config.Value.BaseAddress) };
     }
     public async Task<ChatResponse?> SendChatRequest(string input)
