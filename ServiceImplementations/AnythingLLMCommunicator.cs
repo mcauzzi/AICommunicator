@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using ChatDtos;
+using InternalDtos;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ServiceImplementations.Configs;
