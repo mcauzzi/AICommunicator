@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using InternalDtos;
 using Microsoft.CognitiveServices.Speech;
 using Microsoft.CognitiveServices.Speech.Audio;
 using Microsoft.Extensions.Logging;
@@ -58,36 +59,23 @@ public class AzureSpeech : ISpeech, IDisposable
         return "";
     }
 
-    public async Task<string> VoiceToText()
+    public async Task<string> VoiceToText(AudioInterface inputDevice)
     {
         SpeechConfig.SpeechRecognitionLanguage = "it-IT";
         //"74929fe5-542f-4f6f-a9fd-81a4bea18fe1"
-        using var audioConfig      = AudioConfig.FromDefaultMicrophoneInput();
+        using var audioConfig      = AudioConfig.FromMicrophoneInput(inputDevice.Id);
         using var speechRecognizer = new SpeechRecognizer(SpeechConfig, audioConfig);
-
         Console.WriteLine("Speak into your microphone.");
         Logger.LogInformation("Sending Speech-to-text request to azure");
         var speechRecognitionResult = await speechRecognizer.RecognizeOnceAsync();
         return OutputSpeechRecognitionResult(speechRecognitionResult);
     }
 
-    public async Task TextToAudio(string text)
+    public async Task TextToAudio(string text, AudioInterface selectedOutputDevice)
     {
-        SpeechConfig.SpeechSynthesisVoiceName = "en-US-AvaMultilingualNeural";
-
-        using (var speechSynthesizer = new SpeechSynthesizer(SpeechConfig))
-        {
-            var       speechSynthesisResult = await speechSynthesizer.SpeakTextAsync(text);
-            using var stream                = AudioDataStream.FromResult(speechSynthesisResult);
-            await stream.SaveToWaveFileAsync("./lastTTSResult.wav");
-            await using (var audioFile = new AudioFileReader("./lastTTSResult.wav"))
-            using (var outputDevice = new WaveOutEvent())
-            {
-                outputDevice.DeviceNumber = 1;
-                outputDevice.Init(audioFile);
-                outputDevice.Play();
-            }
-        }
+        using var audioConfig           = AudioConfig.FromSpeakerOutput(selectedOutputDevice.Id);
+        using var speechSynthesizer     = new SpeechSynthesizer(SpeechConfig,audioConfig);
+        var       speechSynthesisResult = await speechSynthesizer.SpeakTextAsync(text);
     }
 
     public void Dispose()
