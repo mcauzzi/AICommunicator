@@ -1,110 +1,48 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using InternalDtos;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NAudio.CoreAudioApi;
 using ServiceInterfaces;
 
 namespace ServiceImplementations;
 
-public class AudioInterfaceManager : BackgroundService, IAudioInterfaceManager
+public class AudioInterfaceManager : IAudioInterfaceManager
 {
-    public ILogger<AudioInterfaceManager> Logger { get; }
-
     public AudioInterfaceManager(ILogger<AudioInterfaceManager> logger)
     {
         Logger = logger;
     }
 
-    public HashSet<AudioInterface> InputDevices  { get; set; } = new();
-    public HashSet<AudioInterface> OutputDevices { get; set; } = new();
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    public HashSet<AudioInterface>        OutputDevices => GetOutPutDevices();
+    public HashSet<AudioInterface>        InputDevices  => GetInputDevices();
+    public ILogger<AudioInterfaceManager> Logger        { get; }
+
+    private MMDeviceEnumerator AudioDeviceEnumerator { get; set; } = new MMDeviceEnumerator();
+
+    private HashSet<AudioInterface> GetOutPutDevices()
     {
-        while (!stoppingToken.IsCancellationRequested)
-        {
-            var enumerator = new MMDeviceEnumerator();
-            ManageInputDevices(enumerator);
-            ManageOutputDevices(enumerator);
-
-            await Task.Delay(5000, stoppingToken);
-        }
+        return FindOutputDevices();
     }
 
-    private void ManageOutputDevices(MMDeviceEnumerator enumerator)
+    private HashSet<AudioInterface> GetInputDevices()
     {
-        try
-        {
-            var currentOutputDevices = FindOutputDevices(enumerator);
-            foreach (var endpoint in currentOutputDevices)
-            {
-                if (OutputDevices.Add(endpoint))
-                {
-                    Logger.LogInformation("Found new output audio device {AudioDevice}",
-                                          endpoint.Name);
-                }
-            }
-
-            foreach (var endpoint in OutputDevices)
-            {
-                if (!currentOutputDevices.Contains(endpoint))
-                {
-                    OutputDevices.Remove(endpoint);
-                    Logger.LogInformation("Output Audio device removed {AudioDevice}",
-                                          endpoint.Name);
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            Logger.LogError(e, "Error while managing Output Devices");
-        }
+        return FindInputDevices();
     }
 
-    private void ManageInputDevices(MMDeviceEnumerator enumerator)
+    private HashSet<AudioInterface> FindOutputDevices()
     {
-        try
-        {
-            var currentInputDevices = FindInputDevices(enumerator);
-            foreach (var endpoint in currentInputDevices)
-            {
-                if (InputDevices.Add(endpoint))
-                {
-                    Logger.LogInformation("Found new Input audio device {AudioDevice}",
-                                          endpoint.Name);
-                }
-            }
-
-            foreach (var endpoint in InputDevices)
-            {
-                if (!currentInputDevices.Contains(endpoint))
-                {
-                    InputDevices.Remove(endpoint);
-                    Logger.LogInformation("Input Audio device removed {AudioDevice}",
-                                          endpoint.Name);
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            Logger.LogError(e, "Error while managing Input Devices");
-        }
+        return AudioDeviceEnumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active)
+                                    .Select((x) => new AudioInterface()
+                                                   { Id = x.ID, Name = x.FriendlyName }).ToHashSet();
     }
 
-    private static List<AudioInterface> FindOutputDevices(MMDeviceEnumerator enumerator)
+    private HashSet<AudioInterface> FindInputDevices()
     {
-        return enumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active)
-                         .Select((x) => new AudioInterface()
-                                        { Id = x.ID, Name = x.FriendlyName }).ToList();
-    }
-
-    private static IList<AudioInterface> FindInputDevices(MMDeviceEnumerator enumerator)
-    {
-        return enumerator.EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.Active)
-                         .Select((x) => new AudioInterface() { Id = x.ID, Name = x.FriendlyName }).ToList();
+        return AudioDeviceEnumerator.EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.Active)
+                                    .Select((x) => new AudioInterface() { Id = x.ID, Name = x.FriendlyName })
+                                    .ToHashSet();
     }
 }
