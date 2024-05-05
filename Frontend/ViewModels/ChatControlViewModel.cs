@@ -18,6 +18,10 @@ public class ChatControlViewModel:ReactiveObject, IRoutableViewModel
 
     public string CurrentMessage { get; } = "";
 
+    public ChatControlViewModel()
+    {
+        HostScreen = null;
+    }
     public ChatControlViewModel(IScreen screen) => HostScreen = screen;
     public string? UrlPathSegment => "Chat";
     public IScreen HostScreen     { get; }

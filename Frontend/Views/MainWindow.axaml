@@ -5,7 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:Frontend.ViewModels"
         xmlns:viewModels="clr-namespace:Frontend.ViewModels"
-        xmlns:reactiveUi="http://reactiveui.net"
         xmlns:frontend="clr-namespace:Frontend"
         mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="550"
         x:Class="Frontend.Views.MainWindow"
@@ -25,7 +24,6 @@
                                VerticalAlignment="Center" />
                 </rxui:RoutedViewHost.DefaultContent>
                 <rxui:RoutedViewHost.ViewLocator>
-                    <!-- See AppViewLocator.cs section below -->
                     <frontend:AppViewLocator />
                 </rxui:RoutedViewHost.ViewLocator>
             </rxui:RoutedViewHost>
