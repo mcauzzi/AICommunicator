@@ -1,16 +1,15 @@
-using System;
-using System.Diagnostics;
+using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Interactivity;
+using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using Frontend.ViewModels;
 using ReactiveUI;
 
 namespace Frontend.Views;
 
-public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
+public partial class ChatControlView : ReactiveUserControl<ChatControlViewModel>
 {
-    public MainWindow()
+    public ChatControlView()
     {
         InitializeComponent();
         this.WhenActivated(disposables => { });

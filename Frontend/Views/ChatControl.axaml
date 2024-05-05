@@ -1,0 +1,35 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:Frontend.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:CompileBindings="True"
+             x:DataType="viewModels:ChatControlViewModel"
+             x:Class="Frontend.Views.ChatControlView">
+    <Grid RowDefinitions="4*,1*" ColumnDefinitions="*">
+        <ItemsControl ItemsSource="{Binding Messages}" HorizontalAlignment="Stretch">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid ColumnDefinitions="1*,6*">
+                        <Border BorderBrush="Chocolate" BorderThickness="1">
+                            <TextBlock HorizontalAlignment="Stretch" Text="{Binding Sender}"></TextBlock>
+                        </Border>
+                        <Border Grid.Column="1" BorderBrush="Aquamarine" BorderThickness="1">
+                            <TextBlock HorizontalAlignment="Stretch" Text="{Binding Message}"></TextBlock>
+                        </Border>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <Grid Grid.Column="0" Grid.Row="1" ColumnDefinitions="4*,1*">
+            <Border Grid.Column="0" Grid.Row="0" BorderBrush="Black" BorderThickness="1">
+                <TextBlock Margin="10" Text="{Binding CurrentMessage}"></TextBlock>
+            </Border>
+            <Button Grid.Column="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                    Margin="10">
+                Registra
+            </Button>
+        </Grid>
+    </Grid>
+</UserControl>

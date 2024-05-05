@@ -4,59 +4,25 @@ using ReactiveUI;
 
 namespace Frontend.ViewModels;
 
-public class MainWindowViewModel : ViewModelBase
+public class MainWindowViewModel : ReactiveObject, IScreen
 {
-    private string _celsius;
-    private string _fahrenheit;
+    public RoutingState Router { get; } = new RoutingState();
 
-    public string Celsius
-    {
-        get => _celsius;
-        set
-        {
-            _celsius = value;
-            ConvertCelsiusToFahrenheit();
-        }
-    }
+    // The command that navigates a user to first view model.
+    public ReactiveCommand<Unit, IRoutableViewModel> GoNext { get; }
 
-    public string Fahrenheit
-    {
-        get => _fahrenheit;
-        set
-        {
-            _fahrenheit = value;
-            ConvertFahrenheitToCelsius();
-        }
-    }
+    // The command that navigates a user back.
+    public ReactiveCommand<Unit, IRoutableViewModel?> GoBack => Router.NavigateBack;
 
     public MainWindowViewModel()
     {
-        _celsius          = "0";
-        ConvertCelsiusToFahrenheit();
-    }
-
-    private void ConvertCelsiusToFahrenheit()
-    {
-        if (double.TryParse(Celsius, out var C))
-        {
-            var F = C * (9d / 5d) + 32;
-            this.RaiseAndSetIfChanged(ref _fahrenheit,F.ToString("0.0"),nameof(Fahrenheit));
-        }
-        else
-        {
-            this.RaiseAndSetIfChanged(ref _fahrenheit,"0",nameof(Fahrenheit));;
-        }
-    }
-    private void ConvertFahrenheitToCelsius()
-    {
-        if (double.TryParse(Fahrenheit, out var F))
-        {
-            var C = (F - 32) * 5 / 9;
-            this.RaiseAndSetIfChanged(ref _celsius,C.ToString("0.0"),nameof(Celsius));
-        }
-        else
-        {
-            this.RaiseAndSetIfChanged(ref _celsius,"0",nameof(Celsius));
-        }
+        // Manage the routing state. Use the Router.Navigate.Execute
+        // command to navigate to different view models. 
+        //
+        // Note, that the Navigate.Execute method accepts an instance 
+        // of a view model, this allows you to pass parameters to 
+        // your view models, or to reuse existing view models.
+        //
+        Router.Navigate.Execute(new ChatControlViewModel(this));
     }
 }
