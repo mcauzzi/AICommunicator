@@ -2,13 +2,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:viewModels="clr-namespace:Frontend.ViewModels"
+             xmlns:vm="using:Frontend.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:CompileBindings="True"
-             x:DataType="viewModels:ChatControlViewModel"
+             x:DataType="vm:ChatControlViewModel"
              x:Class="Frontend.Views.ChatControlView">
     <Design.DataContext>
-        <viewModels:ChatControlViewModel />
+        <vm:ChatControlViewModel />
     </Design.DataContext>
     <Grid RowDefinitions="4*,1*" ColumnDefinitions="*">
         <ItemsControl ItemsSource="{Binding Messages}" HorizontalAlignment="Stretch">

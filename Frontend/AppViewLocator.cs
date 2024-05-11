@@ -12,6 +12,9 @@ public class AppViewLocator : IViewLocator
                                                                                  ChatControlViewModel context =>
                                                                                      new ChatControlView()
                                                                                      { DataContext = context },
+                                                                                 SettingsViewModel context =>
+                                                                                     new SettingsView()
+                                                                                     { DataContext = context },
                                                                                  _ => throw new
                                                                                      ArgumentOutOfRangeException(nameof
                                                                                          (viewModel))
