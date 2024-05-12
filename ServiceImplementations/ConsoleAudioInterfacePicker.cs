@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using InternalDtos;
 using Microsoft.Extensions.Logging;
+using Models;
 using ServiceInterfaces;
 
 namespace ServiceImplementations;

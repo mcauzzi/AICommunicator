@@ -10,7 +10,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatDtos", "ChatDtos\ChatDt
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceImplementations", "ServiceImplementations\ServiceImplementations.csproj", "{315E500F-BA37-4F50-B4FF-0A3492DD007C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternalDtos", "InternalDtos\InternalDtos.csproj", "{D4762E3D-9739-4C31-B755-53353544FAFB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csproj", "{D4762E3D-9739-4C31-B755-53353544FAFB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frontend", "Frontend\Frontend.csproj", "{4EDBE0C0-3454-4DA4-9310-F73E1B6F8AAD}"
 EndProject

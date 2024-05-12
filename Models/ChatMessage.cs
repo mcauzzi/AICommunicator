@@ -1,4 +1,4 @@
-namespace Frontend.Models;
+namespace Models;
 
 public class ChatMessage
 {

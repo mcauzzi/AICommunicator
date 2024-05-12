@@ -4,10 +4,15 @@ using Avalonia.Markup.Xaml;
 using Frontend.Services;
 using Frontend.ViewModels;
 using Frontend.Views;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using Models;
 using Serilog;
 using Serilog.Events;
 using ServiceImplementations;
+using ServiceImplementations.Configs;
+using ServiceInterfaces;
 
 namespace Frontend;
 
@@ -20,13 +25,19 @@ public partial class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
-        var collection = new ServiceCollection();
+        var builder = new ConfigurationBuilder()
+            .AddJsonFile("appSettings.json",optional:false,reloadOnChange:true);
+
+        var config = builder.Build();
+        var            collection    = new ServiceCollection();
         collection.AddScoped<IRoutingManager, RoutingManager>();
         var logger=new LoggerConfiguration()
             .WriteTo.File("./logs/frontend.log",LogEventLevel.Information)
                .CreateLogger();
         collection.AddLogging(builder =>
                                   builder.AddSerilog(logger));
+        collection.Configure<AiCommunicatorConfig>(config.GetSection(nameof(AiCommunicatorConfig)));
+        collection.AddScoped<ISettingsRepository<CommConfig>, AppSettingsRepository>();
         collection.AddAiCommunicationServices();
         var services = collection.BuildServiceProvider();
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)

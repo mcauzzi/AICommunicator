@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using ChatDtos;
-using InternalDtos;
+using Models;
 
 namespace ServiceInterfaces;
 

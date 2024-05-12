@@ -4,7 +4,6 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using ChatDtos;
-using InternalDtos;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ServiceImplementations.Configs;
@@ -15,7 +14,7 @@ namespace ServiceImplementations;
 // ReSharper disable once InconsistentNaming
 public class AnythingLLMCommunicator : ILLMWebApiCommunicator
 {
-    public AnythingLLMCommunicator(IOptions<AiCommunicatorConfig> config,ILogger<AnythingLLMCommunicator> logger)
+    public AnythingLLMCommunicator(IOptionsSnapshot<AiCommunicatorConfig> config,ILogger<AnythingLLMCommunicator> logger)
     {
         WebApiKey   = config.Value.WebApiKey;
         Logger = logger;

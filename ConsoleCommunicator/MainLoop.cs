@@ -1,4 +1,4 @@
-using InternalDtos;
+using Models;
 using ServiceInterfaces;
 
 namespace ConsoleCommunicator;
