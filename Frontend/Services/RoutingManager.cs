@@ -23,11 +23,15 @@ public class RoutingManager : IRoutingManager
     public IRoutableViewModel? GetViewModelFromPath(string s) => s switch
                                                                  {
                                                                      "Settings" => new SettingsViewModel(MainScreen,
-                                                                          ServiceProvider
-                                                                              .GetRequiredService<
-                                                                                  IAudioInterfaceManager>()),
-                                                                     "Chat" => new ChatControlViewModel(MainScreen),
-                                                                     _      => null
+                                                                      ServiceProvider
+                                                                          .GetRequiredService<
+                                                                              IAudioInterfaceManager>()),
+                                                                     "Chat" => new ChatControlViewModel(MainScreen,
+                                                                      ServiceProvider
+                                                                          .GetRequiredService<ISpeech>(),
+                                                                      ServiceProvider
+                                                                          .GetRequiredService<ILLMWebApiCommunicator>()),
+                                                                     _ => null
                                                                  };
 
     private IServiceProvider ServiceProvider { get; }
