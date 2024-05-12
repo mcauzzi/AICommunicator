@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Reactive;
 using Frontend.Globals;
-using Frontend.Models;
+using Models;
 using ReactiveUI;
 using ServiceInterfaces;
 

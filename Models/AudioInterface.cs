@@ -2,7 +2,7 @@
 
 using System;
 
-namespace InternalDtos
+namespace Models
 {
     public class AudioInterface : IEquatable<AudioInterface>
     {

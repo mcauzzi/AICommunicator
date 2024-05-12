@@ -1,14 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.Reactive;
 using DynamicData.Binding;
 using Frontend.Globals;
-using InternalDtos;
+using Microsoft.Extensions.Options;
+using Models;
 using ReactiveUI;
+using ServiceImplementations.Configs;
 using ServiceInterfaces;
 
 namespace Frontend.ViewModels;
 
-public class SettingsViewModel : ReactiveObject, IRoutableViewModel
+public class SettingsViewModel : ReactiveObject, IRoutableViewModel,IDisposable
 {
     public string?                 UrlPathSegment     => "Settings";
     public IScreen                 HostScreen         { get; } = null!;
@@ -16,22 +19,10 @@ public class SettingsViewModel : ReactiveObject, IRoutableViewModel
 
     public HashSet<AudioInterface> InputAudioDevices { get; set; }
 
-    public SettingsViewModel(IScreen screen, IAudioInterfaceManager audioInterfaceManager)
+    public CommConfig CommConfig
     {
-        InputAudioDevices     = audioInterfaceManager.InputDevices;
-        OutputAudioDevices    = audioInterfaceManager.OutputDevices;
-        HostScreen            = screen;
-        AudioInterfaceManager = audioInterfaceManager;
-        this.WhenPropertyChanged(x => x.SelectedInputAudioSource)
-            .Subscribe(x => GlobalAppState.SelectedInputAudioDevice = x.Value);
-        this.WhenPropertyChanged(x => x.SelectedOutputAudioSource)
-            .Subscribe(x => GlobalAppState.SelectedOutputAudioDevice = x.Value);
-    }
-
-    public SettingsViewModel()
-    {
-        InputAudioDevices  = new();
-        OutputAudioDevices = new();
+        get => _commConfig;
+        set => this.RaiseAndSetIfChanged(ref _commConfig, value);
     }
 
     public AudioInterface? SelectedOutputAudioSource
@@ -45,6 +36,37 @@ public class SettingsViewModel : ReactiveObject, IRoutableViewModel
         get => _selectedInputAudioSource;
         set => this.RaiseAndSetIfChanged(ref _selectedInputAudioSource, value);
     }
+    public ReactiveCommand<Unit, Unit> UpdateSettingsCommand { get; set; }
+
+    public SettingsViewModel(IScreen screen, IAudioInterfaceManager audioInterfaceManager,
+                             ISettingsRepository<CommConfig> repo,
+                             IOptions<AiCommunicatorConfig> aiCommConfig)
+    {
+        InputAudioDevices     = audioInterfaceManager.InputDevices;
+        OutputAudioDevices    = audioInterfaceManager.OutputDevices;
+        HostScreen            = screen;
+        AudioInterfaceManager = audioInterfaceManager;
+        CommConfig = new CommConfig()
+                     {
+                         WebApiKey     = aiCommConfig.Value.WebApiKey, BaseAddress = aiCommConfig.Value.BaseAddress,
+                         WorkspaceSlug = aiCommConfig.Value.WorkspaceSlug
+                     };
+        UpdateSettingsCommand = ReactiveCommand.CreateFromTask(async x =>
+                                                               {
+                                                                   await repo.Update(CommConfig);
+                                                                   screen.Router.NavigateBack.Execute();
+                                                               });
+        Subscriptions.Add(this.WhenPropertyChanged(x => x.SelectedInputAudioSource)
+                              .Subscribe(x => GlobalAppState.SelectedInputAudioDevice = x.Value));
+        Subscriptions.Add(this.WhenPropertyChanged(x => x.SelectedOutputAudioSource)
+                              .Subscribe(x => GlobalAppState.SelectedOutputAudioDevice = x.Value));
+    }
+
+    public SettingsViewModel()
+    {
+        InputAudioDevices  = new();
+        OutputAudioDevices = new();
+    }
 
     public void Refresh()
     {
@@ -52,7 +74,19 @@ public class SettingsViewModel : ReactiveObject, IRoutableViewModel
         OutputAudioDevices = AudioInterfaceManager.OutputDevices;
     }
 
-    private AudioInterface?         _selectedOutputAudioSource;
-    private AudioInterface?         _selectedInputAudioSource;
-    private IAudioInterfaceManager AudioInterfaceManager { get; }
+    
+    private AudioInterface?             _selectedOutputAudioSource;
+    private AudioInterface?             _selectedInputAudioSource;
+    private CommConfig                  _commConfig;
+    private IAudioInterfaceManager      AudioInterfaceManager { get; }
+    private List<IDisposable>           Subscriptions         { get; set; } = new();
+
+    public void Dispose()
+    {
+        UpdateSettingsCommand.Dispose();
+        foreach (var sub in Subscriptions)
+        {
+            sub.Dispose();
+        }
+    }
 }

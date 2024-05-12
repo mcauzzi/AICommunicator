@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using InternalDtos;
+using Models;
 
 namespace ServiceInterfaces;
 
