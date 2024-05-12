@@ -5,7 +5,6 @@ using Frontend.Services;
 using Frontend.ViewModels;
 using Frontend.Views;
 using Microsoft.Extensions.DependencyInjection;
-using ReactiveUI;
 using Serilog;
 using Serilog.Events;
 using ServiceImplementations;

@@ -26,9 +26,10 @@
                     <frontend:AppViewLocator />
                 </rxui:RoutedViewHost.ViewLocator>
             </rxui:RoutedViewHost>
-            <Grid Grid.Column="0" RowDefinitions="Auto, Auto, Auto">
+            <StackPanel Grid.Column="0">
                 <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="10" Command="{Binding OpenSettings}">Impostazioni</Button>
-            </Grid>
+                <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="10" Command="{Binding OpenChat}">Chat</Button>
+            </StackPanel>
         </Grid>
     </DockPanel>
 

@@ -15,7 +15,7 @@ namespace ServiceImplementations;
 // ReSharper disable once InconsistentNaming
 public class AnythingLLMCommunicator : ILLMWebApiCommunicator
 {
-    public AnythingLLMCommunicator(IOptions<AnythingLLMConfig> config,ILogger<AnythingLLMCommunicator> logger)
+    public AnythingLLMCommunicator(IOptions<AiCommunicatorConfig> config,ILogger<AnythingLLMCommunicator> logger)
     {
         WebApiKey   = config.Value.WebApiKey;
         Logger = logger;

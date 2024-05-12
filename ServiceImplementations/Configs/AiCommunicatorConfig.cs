@@ -1,7 +1,7 @@
 namespace ServiceImplementations.Configs;
 
 // ReSharper disable once InconsistentNaming
-public class AnythingLLMConfig
+public class AiCommunicatorConfig
 {
     public required string BaseAddress   { get; set; }
     public required string WebApiKey     { get; set; }
