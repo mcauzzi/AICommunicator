@@ -1,8 +1,8 @@
 using ConsoleCommunicator;
+using Models.Configs;
 using Serilog;
 using Serilog.Formatting.Compact;
 using ServiceImplementations;
-using ServiceImplementations.Configs;
 
 var       builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddAiCommunicationServices();

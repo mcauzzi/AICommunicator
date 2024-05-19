@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using ChatDtos;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using ServiceImplementations.Configs;
+using Models.Configs;
 using ServiceInterfaces;
 
 namespace ServiceImplementations;
@@ -16,11 +16,12 @@ public class AnythingLLMCommunicator : ILLMWebApiCommunicator
 {
     public AnythingLLMCommunicator(IOptionsSnapshot<AiCommunicatorConfig> config,ILogger<AnythingLLMCommunicator> logger)
     {
-        WebApiKey   = config.Value.WebApiKey;
-        Logger = logger;
-        ChatUrl     =$"api/v1/workspace/{config.Value.WorkspaceSlug}/chat";
-        Client      = new HttpClient() { BaseAddress = new Uri(config.Value.BaseAddress) };
+        Config    = config;
+        Logger    = logger;
     }
+
+    private IOptionsSnapshot<AiCommunicatorConfig> Config { get; set; }
+
     public async Task<ChatResponse?> SendChatRequest(string input)
     {
         using var scope=Logger.BeginScope(new Dictionary<string, string> { [nameof(ChatUrl)]=ChatUrl,[nameof(Client.BaseAddress)]=Client.BaseAddress.ToString() });
@@ -28,16 +29,36 @@ public class AnythingLLMCommunicator : ILLMWebApiCommunicator
         var req = new HttpRequestMessage(HttpMethod.Post, ChatUrl);
         req.Headers.Add("Authorization", $"Bearer {WebApiKey}");
         req.Content = JsonContent.Create(new ChatRequest() { Message = input });
-        var response = await Client.SendAsync(req);
-        response.EnsureSuccessStatusCode();
-        
-        var serializedResponse = await response.Content.ReadFromJsonAsync<ChatResponse>();
-        Logger.LogInformation("Message successfully sent! Response:{ChatResponse}",serializedResponse);
-        return serializedResponse;
+      
+        try
+        {
+            var response = await Client.SendAsync(req);
+            var serializedResponse = await response.Content.ReadFromJsonAsync<ChatResponse>();
+            Logger.LogInformation("Chat Response received! Response:{ChatResponse}",serializedResponse);
+            return serializedResponse;
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex,"Error while Sending chat Request");
+            return null;
+        }
     }
+    
+    private string                           ChatUrl   =>$"api/v1/workspace/{Config.Value.WorkspaceSlug}/chat";
+    private string                           WebApiKey => Config.Value.WebApiKey;
+    private ILogger<AnythingLLMCommunicator> Logger    { get; }
+    private HttpClient?                      _currentClient;
 
-    private string ChatUrl   { get; }
-    private string WebApiKey { get; }
-    private  ILogger<AnythingLLMCommunicator> Logger    { get; }
-    private HttpClient Client    { get; }
+    private HttpClient Client
+    {
+        get
+        {
+            if (_currentClient is null || Config.Value.BaseAddress != _currentClient.BaseAddress.ToString())
+            {
+                _currentClient = new HttpClient() { BaseAddress = new Uri(Config.Value.BaseAddress) };
+            }
+
+            return _currentClient;
+        }
+    }
 }

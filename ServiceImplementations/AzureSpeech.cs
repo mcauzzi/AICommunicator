@@ -73,6 +73,10 @@ public class AzureSpeech : ISpeech, IDisposable
 
     public async Task TextToAudio(string text, AudioInterface selectedOutputDevice)
     {
+        if (string.IsNullOrEmpty(text))
+        {
+            return;
+        }
         using var audioConfig           = AudioConfig.FromSpeakerOutput(selectedOutputDevice.Id);
         using var speechSynthesizer     = new SpeechSynthesizer(SpeechConfig,audioConfig);
         var       speechSynthesisResult = await speechSynthesizer.SpeakTextAsync(text);

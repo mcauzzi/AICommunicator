@@ -5,8 +5,8 @@ using DynamicData.Binding;
 using Frontend.Globals;
 using Microsoft.Extensions.Options;
 using Models;
+using Models.Configs;
 using ReactiveUI;
-using ServiceImplementations.Configs;
 using ServiceInterfaces;
 
 namespace Frontend.ViewModels;
@@ -19,10 +19,10 @@ public class SettingsViewModel : ReactiveObject, IRoutableViewModel,IDisposable
 
     public HashSet<AudioInterface> InputAudioDevices { get; set; }
 
-    public CommConfig CommConfig
+    public FrontendConfig FrontendConfig
     {
-        get => _commConfig;
-        set => this.RaiseAndSetIfChanged(ref _commConfig, value);
+        get => _frontendConfig;
+        set => this.RaiseAndSetIfChanged(ref _frontendConfig, value);
     }
 
     public AudioInterface? SelectedOutputAudioSource
@@ -39,21 +39,20 @@ public class SettingsViewModel : ReactiveObject, IRoutableViewModel,IDisposable
     public ReactiveCommand<Unit, Unit> UpdateSettingsCommand { get; set; }
 
     public SettingsViewModel(IScreen screen, IAudioInterfaceManager audioInterfaceManager,
-                             ISettingsRepository<CommConfig> repo,
+                             ISettingsRepository<FrontendConfig> repo,
                              IOptions<AiCommunicatorConfig> aiCommConfig)
     {
         InputAudioDevices     = audioInterfaceManager.InputDevices;
         OutputAudioDevices    = audioInterfaceManager.OutputDevices;
         HostScreen            = screen;
         AudioInterfaceManager = audioInterfaceManager;
-        CommConfig = new CommConfig()
+        FrontendConfig = new FrontendConfig()
                      {
-                         WebApiKey     = aiCommConfig.Value.WebApiKey, BaseAddress = aiCommConfig.Value.BaseAddress,
-                         WorkspaceSlug = aiCommConfig.Value.WorkspaceSlug
+                         AiCommunicatorConfig = aiCommConfig.Value
                      };
         UpdateSettingsCommand = ReactiveCommand.CreateFromTask(async x =>
                                                                {
-                                                                   await repo.Update(CommConfig);
+                                                                   await repo.Update(FrontendConfig);
                                                                    screen.Router.NavigateBack.Execute();
                                                                });
         Subscriptions.Add(this.WhenPropertyChanged(x => x.SelectedInputAudioSource)
@@ -77,7 +76,7 @@ public class SettingsViewModel : ReactiveObject, IRoutableViewModel,IDisposable
     
     private AudioInterface?             _selectedOutputAudioSource;
     private AudioInterface?             _selectedInputAudioSource;
-    private CommConfig                  _commConfig;
+    private FrontendConfig                  _frontendConfig;
     private IAudioInterfaceManager      AudioInterfaceManager { get; }
     private List<IDisposable>           Subscriptions         { get; set; } = new();
 

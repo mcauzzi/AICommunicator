@@ -5,7 +5,7 @@ namespace ChatDtos
         public string Id           { get; set; }
         public string Type         { get; set; }
         public bool   Close        { get; set; }
-        public object Error        { get; set; }
+        public string Error        { get; set; }
         public int    ChatId       { get; set; }
         public string TextResponse { get; set; }
 
