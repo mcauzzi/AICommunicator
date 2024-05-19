@@ -3,8 +3,8 @@ using Frontend.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Models;
+using Models.Configs;
 using ReactiveUI;
-using ServiceImplementations.Configs;
 using ServiceInterfaces;
 
 namespace Frontend.Services;
@@ -38,7 +38,7 @@ public class RoutingManager : IRoutingManager
     private SettingsViewModel GetSettingsViewModel()
     {
         return new SettingsViewModel(MainScreen, ServiceProvider.GetRequiredService<IAudioInterfaceManager>(),
-                                     ServiceProvider.GetRequiredService<ISettingsRepository<CommConfig>>(),
+                                     ServiceProvider.GetRequiredService<ISettingsRepository<FrontendConfig>>(),
                                      ServiceProvider.GetRequiredService<IOptions<AiCommunicatorConfig>>());
     }
 

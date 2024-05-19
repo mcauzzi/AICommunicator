@@ -1,4 +1,4 @@
-namespace ServiceImplementations.Configs;
+namespace Models.Configs;
 
 // ReSharper disable once InconsistentNaming
 public class AiCommunicatorConfig
